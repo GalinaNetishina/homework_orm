@@ -38,13 +38,7 @@ def db_fill(file):
     session.commit()
 
 
-if __name__ == "__main__":
-    DSN = get_DSN()
-    engine = sqlalchemy.create_engine(DSN)
-    create_tables(engine)
-    session = sessionmaker(bind=engine)()
-    file = "fixtures/tests_data.json"
-    db_fill(file)
+def author_info():
     q = input("Enter id or name of publisher:\n")
     if q.isdigit():
         id = session.query(Publisher).filter(Publisher.id == int(q)).subquery("id")
@@ -59,4 +53,15 @@ if __name__ == "__main__":
     for book, stock, sale, shop in query.all():
         print(f"{book.title:40}|{shop.name:20}|{sale.price:^7}|{sale.date_sale:%d-%m-%y}")
 
+
+
+if __name__ == "__main__":
+    DSN = get_DSN()
+    engine = sqlalchemy.create_engine(DSN)
+    create_tables(engine)
+    session = sessionmaker(bind=engine)()
+    file = "fixtures/tests_data.json"
+    db_fill(file)
+    author_info()
+    
     session.close()
